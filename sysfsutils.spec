@@ -4,7 +4,7 @@
 #
 Name     : sysfsutils
 Version  : 2.1.0
-Release  : 5
+Release  : 6
 URL      : https://downloads.sourceforge.net/linux-diag/sysfsutils-2.1.0.tar.gz
 Source0  : https://downloads.sourceforge.net/linux-diag/sysfsutils-2.1.0.tar.gz
 Summary  : No detailed summary available
