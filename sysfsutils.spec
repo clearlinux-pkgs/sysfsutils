@@ -4,15 +4,16 @@
 #
 Name     : sysfsutils
 Version  : 2.1.0
-Release  : 7
-URL      : https://downloads.sourceforge.net/linux-diag/sysfsutils-2.1.0.tar.gz
-Source0  : https://downloads.sourceforge.net/linux-diag/sysfsutils-2.1.0.tar.gz
+Release  : 8
+URL      : https://sourceforge.net/projects/linux-diag/files/sysfsutils/2.1.0/sysfsutils-2.1.0.tar.gz
+Source0  : https://sourceforge.net/projects/linux-diag/files/sysfsutils/2.1.0/sysfsutils-2.1.0.tar.gz
 Summary  : No detailed summary available
 Group    : Development/Tools
-License  : GPL-2.0 LGPL-2.1
-Requires: sysfsutils-bin
-Requires: sysfsutils-lib
-Requires: sysfsutils-doc
+License  : GPL-2.0 LGPL-2.1+
+Requires: sysfsutils-bin = %{version}-%{release}
+Requires: sysfsutils-lib = %{version}-%{release}
+Requires: sysfsutils-man = %{version}-%{release}
+BuildRequires : gfortran
 
 %description
 Sysfs Utilities Package - Includes Libsysfs(v. 2.1.0)
@@ -21,6 +22,7 @@ Sysfs Utilities Package - Includes Libsysfs(v. 2.1.0)
 %package bin
 Summary: bin components for the sysfsutils package.
 Group: Binaries
+Requires: sysfsutils-man = %{version}-%{release}
 
 %description bin
 bin components for the sysfsutils package.
@@ -29,19 +31,12 @@ bin components for the sysfsutils package.
 %package dev
 Summary: dev components for the sysfsutils package.
 Group: Development
-Requires: sysfsutils-lib
-Requires: sysfsutils-bin
+Requires: sysfsutils-lib = %{version}-%{release}
+Requires: sysfsutils-bin = %{version}-%{release}
+Provides: sysfsutils-devel = %{version}-%{release}
 
 %description dev
 dev components for the sysfsutils package.
-
-
-%package doc
-Summary: doc components for the sysfsutils package.
-Group: Documentation
-
-%description doc
-doc components for the sysfsutils package.
 
 
 %package lib
@@ -52,20 +47,35 @@ Group: Libraries
 lib components for the sysfsutils package.
 
 
+%package man
+Summary: man components for the sysfsutils package.
+Group: Default
+
+%description man
+man components for the sysfsutils package.
+
+
 %prep
 %setup -q -n sysfsutils-2.1.0
 
 %build
-%configure --disable-static
-make V=1  %{?_smp_mflags}
-
-%check
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
-export no_proxy=intel.com,localhost
+export no_proxy=localhost,127.0.0.1,0.0.0.0
+export LANG=C
+export SOURCE_DATE_EPOCH=1545260916
+%configure --disable-static
+make  %{?_smp_mflags}
+
+%check
+export LANG=C
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
+export SOURCE_DATE_EPOCH=1545260916
 rm -rf %{buildroot}
 %make_install
 
@@ -84,12 +94,13 @@ rm -rf %{buildroot}
 %defattr(-,root,root,-)
 /usr/include/sysfs/dlist.h
 /usr/include/sysfs/libsysfs.h
-/usr/lib64/*.so
-
-%files doc
-%defattr(-,root,root,-)
-%doc /usr/share/man/man1/*
+/usr/lib64/libsysfs.so
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libsysfs.so.2
+/usr/lib64/libsysfs.so.2.0.1
+
+%files man
+%defattr(0644,root,root,0755)
+/usr/share/man/man1/systool.1
